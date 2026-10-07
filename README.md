@@ -54,8 +54,8 @@ macOS does not switch app extensions on by itself. After the first launch tick
 The release workflow of [yrambler2001/7zip-macos](https://github.com/yrambler2001/7zip-macos)
 rewrites `version` and `sha256` in `Casks/7zip-macos.rb` when a release is published, and nothing
 else, so the quarantine step stays as it is (its `docs/releasing.md` describes the token it uses). The cask's version is `<port>,<upstream>`, for
-example `1.0.0,26.03` — the port's own version and the 7-Zip engine version, both of which appear
-in the disk image's name `7-Zip-26.03-macOS-1.0.0.dmg`. `brew livecheck --cask 7zip-macos` reads
+example `1.1.3,26.04` — the port's own version and the 7-Zip engine version, both of which appear
+in the disk image's name `7-Zip-26.04-macOS-1.1.3.dmg`. `brew livecheck --cask 7zip-macos` reads
 the latest GitHub release.
 
 Problems with the app go to [its issue tracker](https://github.com/yrambler2001/7zip-macos/issues),
