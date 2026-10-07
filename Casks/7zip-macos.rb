@@ -26,6 +26,17 @@ cask "7zip-macos" do
 
   app "7-Zip.app"
 
+  # The app is ad-hoc signed, not notarized (no Developer ID): with the quarantine flag macOS would
+  # block every new version until "Open Anyway". This removes it after every install and every
+  # upgrade: `xattr -dr com.apple.quarantine <appdir>/7-Zip.app`, as the user, no sudo.
+  # (`postflight_steps` is the Homebrew 7 form of a `postflight` block running `system_command`; the
+  # block form is deprecated there and fails `brew style`.)
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args:           ["-dr", "com.apple.quarantine", "{{appdir}}/7-Zip.app"],
+        writable_paths: "{{appdir}}/7-Zip.app"
+  end
+
   uninstall quit: "com.yrambler2001.7zip"
 
   zap trash: [
@@ -38,9 +49,10 @@ cask "7zip-macos" do
   ]
 
   caveats <<~EOS
-    7-Zip for macOS is ad-hoc signed, not notarized: macOS blocks its first launch after
-    every install and every upgrade. Open 7-Zip once and dismiss the warning, then click
-    "Open Anyway" in System Settings > Privacy & Security and confirm. Details:
+    7-Zip for macOS is ad-hoc signed, not notarized (the project has no Apple Developer ID).
+    This cask therefore removes the quarantine flag from #{appdir}/7-Zip.app after every
+    install and upgrade (xattr -dr com.apple.quarantine), so it opens without the
+    "Open Anyway" step. Details:
       https://github.com/yrambler2001/7zip-macos#first-launch-gatekeeper
 
     Homebrew 7 loads casks from a third-party tap only once it is trusted. Installing by

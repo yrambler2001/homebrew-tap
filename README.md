@@ -25,20 +25,23 @@ Update with `brew upgrade --cask 7zip-macos`; remove with `brew uninstall --cask
 
 Requires macOS 14 (Sonoma) or newer; the app is universal (Apple silicon and Intel).
 
-## Gatekeeper: "Open Anyway" after every install and update
+## Gatekeeper: the cask removes the quarantine flag
 
 The app is **ad-hoc signed, not notarized** (the project has no paid Apple Developer ID). Homebrew
-downloads it with the quarantine attribute like a browser does, so macOS blocks the first launch
-of each new version:
+downloads it with the quarantine attribute, like a browser does, and macOS would then block the
+first launch of every new version until you click **Open Anyway** in System Settings.
 
-1. Open 7-Zip once and dismiss the warning.
-2. Open **System Settings ▸ Privacy & Security** and click **Open Anyway** next to the message
-   about 7-Zip.
-3. Confirm with Touch ID or your password.
+So this cask **removes the quarantine flag itself**: after every install and every upgrade its
+`postflight_steps` run
 
-This cask deliberately does not remove the quarantine attribute for you. If you prefer to do it
-yourself: `xattr -dr com.apple.quarantine /Applications/7-Zip.app`. The project's README explains
-the trade-off: <https://github.com/yrambler2001/7zip-macos#first-launch-gatekeeper>.
+```sh
+xattr -dr com.apple.quarantine /Applications/7-Zip.app
+```
+
+and 7-Zip opens directly. Installing the cask is the consent to that. If you would rather keep
+Gatekeeper's check, install from the disk image on the
+[Releases page](https://github.com/yrambler2001/7zip-macos/releases) instead and use *Open Anyway*;
+the project's README explains it: <https://github.com/yrambler2001/7zip-macos#first-launch-gatekeeper>.
 
 ## Finder integration
 
@@ -49,8 +52,8 @@ macOS does not switch app extensions on by itself. After the first launch tick
 ## How the cask is updated
 
 The release workflow of [yrambler2001/7zip-macos](https://github.com/yrambler2001/7zip-macos)
-rewrites `version` and `sha256` in `Casks/7zip-macos.rb` when a release is published (its
-`docs/releasing.md` describes the token it uses). The cask's version is `<port>,<upstream>`, for
+rewrites `version` and `sha256` in `Casks/7zip-macos.rb` when a release is published, and nothing
+else, so the quarantine step stays as it is (its `docs/releasing.md` describes the token it uses). The cask's version is `<port>,<upstream>`, for
 example `1.0.0,26.03` — the port's own version and the 7-Zip engine version, both of which appear
 in the disk image's name `7-Zip-26.03-macOS-1.0.0.dmg`. `brew livecheck --cask 7zip-macos` reads
 the latest GitHub release.
