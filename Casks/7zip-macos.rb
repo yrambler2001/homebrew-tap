@@ -1,8 +1,8 @@
 cask "7zip-macos" do
   # "<port>,<upstream>": the tag is v<port>, the disk image is named after both.
   # Rewritten on every release by yrambler2001/7zip-macos's release workflow (Mac/scripts/update-cask.sh).
-  version "1.1.3,26.04"
-  sha256 "ee2ae2e4cfd850e236608567942ce67a0763e013bfcd1acb6860890319998cba"
+  version "1.2.0,26.04"
+  sha256 "eed8ce2fadc49df209a1c0b9bd0f5408523d990f5ea67d7c8fbe6a036f70cc39"
 
   url "https://github.com/yrambler2001/7zip-macos/releases/download/v#{version.csv.first}/7-Zip-#{version.csv.second}-macOS-#{version.csv.first}.dmg"
   name "7-Zip for macOS"
